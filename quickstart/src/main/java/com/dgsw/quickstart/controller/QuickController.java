@@ -2,12 +2,17 @@ package com.dgsw.quickstart.controller;
 
 import com.dgsw.quickstart.dto.ItemDTO;
 import com.dgsw.quickstart.dto.ResponseDTO;
+import com.dgsw.quickstart.service.QuickService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 public class QuickController {
+    @Autowired
+    private QuickService quickService;
     @GetMapping("/dummy1")
     public String dummy1(){
         log.info("dummy1");
@@ -39,9 +44,10 @@ public class QuickController {
     }
 
     @PostMapping("/item2")
-    public ResponseDTO registerItem2(@RequestBody ItemDTO item) {
+    public ResponseDTO registerItem2(@RequestBody @Valid ItemDTO item) {
         log.info("itemId:{}", item.getId());
         log.info("itemName:{}", item.getName());
+        boolean created = quickService.registerItem(item);
         return new ResponseDTO("ok");
     }
 }

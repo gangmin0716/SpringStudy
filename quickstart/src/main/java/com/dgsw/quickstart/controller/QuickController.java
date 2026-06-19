@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 public class QuickController {
@@ -49,5 +51,29 @@ public class QuickController {
         log.info("itemName:{}", item.getName());
         boolean created = quickService.registerItem(item);
         return new ResponseDTO("ok");
+    }
+
+    @GetMapping("/item")
+    public ItemDTO getItem(@RequestParam("id") String id) {
+        return quickService.getItemById(id);
+    }
+
+    @GetMapping("/items")
+    public List<ItemDTO> getAllItems() {
+        return quickService.getAllItems();
+    }
+
+    @PutMapping("/item")
+    public ResponseDTO updateItem(@RequestBody @Valid ItemDTO item) {
+        log.info("updateItemId:{}", item.getId());
+        boolean updated = quickService.updateItem(item);
+        return new ResponseDTO(updated ? "updated" : "not found");
+    }
+
+    @DeleteMapping("/item")
+    public ResponseDTO deleteItem(@RequestParam("id") String id) {
+        log.info("deleteItemId:{}", id);
+        boolean deleted = quickService.deleteItem(id);
+        return new ResponseDTO(deleted ? "deleted" : "not found");
     }
 }
